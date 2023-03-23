@@ -49,7 +49,7 @@ class Particle {
         this.x = canvas.width/2 + (mouse.x - canvas.width/2)/2;
         this.y = canvas.height/2 + (mouse.y - canvas.height/2) / 2;
         this.size = Math.random() * 15 + 1;
-        this.speedX = Math.random()*0.0000001 -1.5;
+        this.speedX = Math.random()*0.0000001 -10;
         this.speedY = Math.random() * 2 -1;
         this.color = "hsl(" + hue + ", 100%, 50%)";
     }
