@@ -93,7 +93,6 @@ function handleParticles(){
 }
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
-
     particlesArray.push(new Particle())
     handleParticles();
     hue += Math.random();
