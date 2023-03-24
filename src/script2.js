@@ -55,7 +55,7 @@ class Particle{
 }
 
 function init(){
-    for (let i = 0; i < 5000; i++){
+    for (let i = 0; i < 10000; i++){
         particlesArray.push(new Particle);
     }
 }
