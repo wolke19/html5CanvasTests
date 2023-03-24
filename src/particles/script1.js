@@ -94,10 +94,21 @@ function handleParticles(){
         }
     }
 }
+
+addEventListener("click", function (event){
+    if (event.x > canvas.width/2 - 50 &&
+        event.x < canvas.width/2 + 50 &&
+        event.y > 50 &&
+        event.y < 100){
+        window.location = "https://wolke19.github.io/html5CanvasTests/src/physics";
+    }
+})
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    // ctx.fillStyle = "rgba(0,0,0,0.02)";
-    // ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.strokeText("NEXT", canvas.width / 2, 100, 200 );
+
     handleParticles();
     hue += 5;
     requestAnimationFrame(animate);

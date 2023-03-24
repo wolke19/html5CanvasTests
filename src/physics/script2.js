@@ -48,14 +48,12 @@ class Particle{
 
     draw(){
         ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,1,0,Math.PI*2);
-        ctx.fill();
+        ctx.fillRect(this.x, this.y, 2,2)
     }
 }
 
 function init(){
-    for (let i = 0; i < 10000; i++){
+    for (let i = 0; i < 16000; i++){
         particlesArray.push(new Particle);
     }
 }
