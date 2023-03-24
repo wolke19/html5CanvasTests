@@ -64,8 +64,20 @@ function handleParticles(){
         particlesArray[i].draw();
     }
 }
+addEventListener("click", function (event){
+    if (event.x > canvas.width/2 - 50 &&
+        event.x < canvas.width/2 + 50 &&
+        event.y > 50 &&
+        event.y < 100){
+        window.location = "https://wolke19.github.io/html5CanvasTests/src/flowField";
+    }
+})
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.font = "30px Arial";
+    ctx.strokeStyle = "white";
+    ctx.textAlign = "center";
+    ctx.strokeText("NEXT", canvas.width / 2, 100, 200 );
     handleParticles();
     requestAnimationFrame(animate);
 }
