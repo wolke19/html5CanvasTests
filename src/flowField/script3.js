@@ -117,14 +117,14 @@ addEventListener("click", function (event){
             event.x < canvas.width/2 + 50 &&
             event.y > 50 &&
             event.y < 100){
-        window.location = "../particles/index1.html";
+        window.location = "https://wolke19.github.io/html5CanvasTests";
         }
 })
 function animate(){
     c.clearRect(0,0,canvas.width, canvas.height);
     c.font = "30px Arial";
     c.textAlign = "center";
-    c.strokeText("NEXT", canvas.width / 2, 100, 200 );
+    c.strokeText("back to 1", canvas.width / 2, 100, 200 );
     effect.render(c);
     requestAnimationFrame(animate);
 }
