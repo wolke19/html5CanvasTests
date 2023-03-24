@@ -5,8 +5,8 @@ canvas.height = window.innerHeight;
 
 const particlesArray = [];
 const mouse = {
-    x: null,
-    y: null,
+    x: canvas.width/2,
+    y: canvas.height/2,
 }
 
 
@@ -18,13 +18,15 @@ class Particle{
     constructor() {
         this.x = Math.random()* canvas.width;
         this.y = Math.random()* canvas.height;
-        this.speedX = Math.random() - 0.5;
-        this.speedY = Math.random() - 0.5;
+        this.speedX = 0;
+        this.speedY = 0;
+        this.distanceFromCenter = Math.sqrt((canvas.width/2-this.x)*(canvas.width/2-this.x) +(canvas.height/2-this.y)*(canvas.height/2-this.y));
+        this.color = this.color = "hsl(" + this.distanceFromCenter / 2 + ", 100%, 50%)";
     }
 
     update(){
-        this.speedX /= 1.01;
-        this.speedY /= 1.01;
+        this.speedX /= 1.001;
+        this.speedY /= 1.001;
 
         if (this.x < 0 || this.x > canvas.width){
             this.speedX *= -1;
@@ -37,15 +39,15 @@ class Particle{
         const dy = mouse.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        this.speedX += dx / (5* distance);
-        this.speedY += dy / (5* distance);
+        this.speedX += dx / (20* distance);
+        this.speedY += dy / (20* distance);
 
         this.x += this.speedX;
         this.y += this.speedY;
     }
 
     draw(){
-        ctx.fillStyle = "grey";
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x,this.y,1,0,Math.PI*2);
         ctx.fill();
@@ -53,7 +55,7 @@ class Particle{
 }
 
 function init(){
-    for (let i = 0; i < 10000; i++){
+    for (let i = 0; i < 5000; i++){
         particlesArray.push(new Particle);
     }
 }
