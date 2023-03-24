@@ -25,8 +25,8 @@ class Particle{
     }
 
     update(){
-        this.speedX /= 1.001;
-        this.speedY /= 1.001;
+        this.speedX /= 1.005;
+        this.speedY /= 1.005;
 
         if (this.x < 0 || this.x > canvas.width){
             this.speedX *= -1;
@@ -39,8 +39,8 @@ class Particle{
         const dy = mouse.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        this.speedX += dx / (20* distance);
-        this.speedY += dy / (20* distance);
+        this.speedX += dx / (12* distance);
+        this.speedY += dy / (12* distance);
 
         this.x += this.speedX;
         this.y += this.speedY;
