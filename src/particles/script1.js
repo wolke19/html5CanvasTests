@@ -32,7 +32,9 @@ const mouse = {
 canvas.addEventListener("click", function (event){
     mouse.x = event.x;
     mouse.y = event.y;
-    particlesArray.push(new Particle());
+    for (let i = 0; i < 100; i++) {
+        particlesArray.push(new Particle());
+    }
 })
 
 canvas.addEventListener("mousemove", function (event){
@@ -57,7 +59,7 @@ class Particle {
     update(){
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.size > 0.2) this.size -= 0.1;
+        if (this.size > 0.2) this.size -= 0.05;
     }
     draw(){
         ctx.fillStyle = this.color;
