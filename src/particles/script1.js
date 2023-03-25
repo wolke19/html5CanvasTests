@@ -38,9 +38,7 @@ canvas.addEventListener("click", function (event){
 canvas.addEventListener("mousemove", function (event){
     mouse.x = event.x;
     mouse.y = event.y;
-    for (let i = 0; i < 2; i++){
-        particlesArray.push(new Particle());
-    }
+    particlesArray.push(new Particle());
 })
 
 // ctx.fillStyle = "white";

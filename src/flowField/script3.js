@@ -77,7 +77,7 @@ class Effect {
         this.width = w;
         this.height = h;
         this.particles = [];
-        this.numberOfParticles = 2000;
+        this.numberOfParticles = 200;
         this.cellSize = 10;
         this.rows;
         this.colums;
