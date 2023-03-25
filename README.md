@@ -1,0 +1,12 @@
+# html5CanvasTests
+
+Learning Javaskript + HTML5 Canvas
+
+Game assets from:
+https://www.gamedeveloperstudio.com/index.php
+
+Helpful tutorials on youtube (among others):
+- ten minute physics
+- franks laboratory
+- scott manley
+- gonkee
