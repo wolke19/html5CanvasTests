@@ -76,8 +76,6 @@ class Eye{
 
         if (this.distance < this.awareness) this.state = 1;
         else this.state = 0;
-
-
         this.draw();
     }
     draw(){
