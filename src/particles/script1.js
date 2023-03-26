@@ -9,20 +9,6 @@ let hue = 0;
 window.addEventListener("resize", function (){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    // Draw Rect
-    // ctx.fillStyle = "white";
-    // ctx.fillRect(10,20,150,150);
-
-    // Draw Circle
-    ctx.fillStyle = "red";
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.arc(100,100,50,0,Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-    console.log(ctx);
 });
 
 const mouse = {
