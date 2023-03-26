@@ -57,12 +57,12 @@ class Eye{
         this.pupilX = this.x;
         this.pupilY = this.y;
 
-        this.distance = 1000;
+        this.distance = 5;
         this.awareness = 350;
         this.state = 0;
 
         this.eyeSlitWidth = 1;
-
+        this.event = null;
     }
 
     update(){
@@ -74,9 +74,12 @@ class Eye{
         this.pupilX = this.x + (this.radius - this.pupilRadius) * .6 * (dx / this.awareness);
         this.pupilY = this.y + (this.radius - this.pupilRadius) * .6 * (dy / this.awareness);
 
-        if (this.distance < this.awareness) this.state = 1;
-        else this.state = 0;
+        if (!this.event){
+            if (this.distance < this.awareness) this.state = 1;
+            else this.state = 0;
+        }
         this.draw();
+        console.log(this.event);
     }
     draw(){
         switch (this.state){
@@ -91,16 +94,22 @@ class Eye{
                 ctx.beginPath();
                 ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
                 ctx.stroke();
-
                 ctx.beginPath();
                 ctx.arc(this.pupilX, this.pupilY, this.pupilRadius, 0, Math.PI * 2);
                 ctx.fill();
                 break;
             }
-            case 2:{
-                ctx.fillRect(this.x - this.radius, this.y - this.eyeSlitWidth, this.radius*2, 100);
-                break;
-            }
+            // case 2: {
+            //     ctx.beginPath();
+            //     ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
+            //     ctx.stroke();
+            //     for (let i = 0; i < this.radius / 3; i++) {
+            //         ctx.beginPath();
+            //         ctx.arc(this.pupilX, this.pupilY, this.pupilRadius - i, 0, Math.PI * 2);
+            //         ctx.stroke();
+            //     }
+            //
+            //     break;
         }
     }
 }
@@ -143,8 +152,6 @@ class Face{
             }
         }
 
-
-
         this.eyeL.update();
         this.eyeR.update();
     }
@@ -159,9 +166,6 @@ class Face{
         ctx.fillRect(this.mouthX , this.mouthY, this.mouthWidth, this.mouthOpenPx);
     }
 }
-
-
-
 
 // FUNCTIONS____________________________________________________________________________________________________________
 
@@ -180,9 +184,20 @@ function handleQuirks() {
     else if (mouthCounter >= 1600) mouthCounter = 0;
     else face.mouthState = 0;
 
-    if (sneakPeekCounter > 100) face.eyeL.state = 2;
-    sneakPeekCounter++;
-
+    // if (mouse.x > face.eyeL.x &&
+    //     mouse.x < face.eyeR.x &&
+    //     mouse.y > face.y - 2 * face.eyeR.radius &&
+    //     mouse.y < face.y
+    // ){
+    //     face.eyeR.event = true;
+    //     face.eyeL.event = true;
+    //     face.eyeL.state = 2;
+    //     face.eyeR.state = 2;
+    // }
+    // else {
+    //     face.eyeR.event = false;
+    //     face.eyeL.event = false;
+    // }
 }
 
 
