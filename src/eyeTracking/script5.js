@@ -31,7 +31,14 @@ canvas.addEventListener("mousemove", function (event){
     mouse.y = event.y;
 })
 
-
+addEventListener("click", function (event){
+    if (event.x > canvas.width/2 - 50 &&
+        event.x < canvas.width/2 + 50 &&
+        event.y > 50 &&
+        event.y < 100){
+        window.location = "https://wolke19.github.io/html5CanvasTests";
+    }
+})
 
 
 
@@ -105,6 +112,9 @@ function handleEyes(){
 function animate(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     handleEyes();
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.strokeText("next", canvas.width / 2, 100, 200 );
     requestAnimationFrame(animate);
 }
 
