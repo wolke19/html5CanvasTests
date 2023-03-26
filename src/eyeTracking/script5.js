@@ -8,20 +8,13 @@ ctx.strokeStyle = "white";
 
 let gameFrame = 0;
 let mouthCounter = 0;
+let sneakPeekCounter = 0;
 
-// BEHAVIOUR
-const mountState0 = 1500 + Math.random() * 1500;
-const mouthState0 = 0;
-
-const eyeArray = [];
-
-const middle = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-}
 const mouse = {
     x: null,
     y: null,
+    oldX: null,
+    oldY: null,
 }
 
 
@@ -34,6 +27,8 @@ window.addEventListener("resize", function () {
 addEventListener("click", function (event){
 })
 canvas.addEventListener("mousemove", function (event){
+    mouse.oldX = mouse.x;
+    mouse.oldY = mouse.y;
     mouse.x = event.x;
     mouse.y = event.y;
 })
@@ -62,42 +57,53 @@ class Eye{
         this.pupilX = this.x;
         this.pupilY = this.y;
 
+        this.distance = 1000;
         this.awareness = 350;
-        this.state = false;
-        this.event = 0;
+        this.state = 0;
+
+        this.eyeSlitWidth = 1;
+
     }
 
     update(){
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < this.awareness){
-            this.pupilRadius = this.maxPupilRadius - 0.9*(this.maxPupilRadius * (distance / this.awareness));
-            this.pupilX = this.x + (this.radius - this.pupilRadius) * (dx / (canvas.width));
-            this.pupilY = this.y + (this.radius - this.pupilRadius) * (dy /canvas.height);
-            this.state = true;
-        }
-        else{
-            this.state = false;
-        }
+        this.distance = Math.sqrt(dx * dx + dy * dy);
+
+        this.pupilRadius = this.maxPupilRadius - 0.9*(this.maxPupilRadius * (this.distance / this.awareness));
+        this.pupilX = this.x + (this.radius - this.pupilRadius) * .6 * (dx / this.awareness);
+        this.pupilY = this.y + (this.radius - this.pupilRadius) * .6 * (dy / this.awareness);
+
+        if (this.distance < this.awareness) this.state = 1;
+        else this.state = 0;
+
+
+        this.draw();
     }
-    draw(active){
-        if (active){
-            ctx.beginPath();
-            ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
-            ctx.stroke();
+    draw(){
+        switch (this.state){
+            case 0: {
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius, this.y);
+                ctx.lineTo(this.x + this.radius, this.y);
+                ctx.stroke()
+                break;
+            }
+            case 1: {
+                ctx.beginPath();
+                ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
+                ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(this.pupilX, this.pupilY, this.pupilRadius, 0, Math.PI * 2);
-            ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.pupilX, this.pupilY, this.pupilRadius, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            }
+            case 2:{
+                ctx.fillRect(this.x - this.radius, this.y - this.eyeSlitWidth, this.radius*2, 100);
+                break;
+            }
         }
-        else{
-            ctx.beginPath();
-            ctx.moveTo(this.x - this.radius, this.y);
-            ctx.lineTo(this.x + this.radius, this.y);
-            ctx.stroke();
-        }
-
     }
 }
 
@@ -111,8 +117,8 @@ class Face{
         this.mouthX = this.x - this.mouthWidth / 2;
         this.mouthY = this.y + this.radius/2;
         this.mouthOpenPx = 1;
-        this.eyeL = new Eye(this.x - this.radius / 2, this.y - this.radius / 3, this.radius/3);
-        this.eyeR = new Eye(this.x + this.radius / 2, this.y - this.radius / 3, this.radius/3);
+        this.eyeL = new Eye(this.x - this.radius / 2.3, this.y - this.radius / 3, this.radius/3);
+        this.eyeR = new Eye(this.x + this.radius / 2.3, this.y - this.radius / 3, this.radius/3);
     }
     update(){
         switch (this.mouthState){
@@ -137,8 +143,8 @@ class Face{
                 this.mouthOpenPx = 1;
                 break;
             }
-
         }
+
 
 
         this.eyeL.update();
@@ -153,10 +159,6 @@ class Face{
 
         // MOUTH
         ctx.fillRect(this.mouthX , this.mouthY, this.mouthWidth, this.mouthOpenPx);
-
-        // EYES
-        this.eyeL.draw(this.eyeL.state);
-        this.eyeR.draw(this.eyeR.state);
     }
 }
 
@@ -172,12 +174,17 @@ function handleFace(){
     face.draw();
 }
 
-function handleQuirks(){
+function handleQuirks() {
+    // MOUTH
     mouthCounter++;
     if (mouthCounter >= 1000 && mouthCounter < 1400) face.mouthState = 1;
     else if (mouthCounter >= 1400 && mouthCounter < 1600) face.mouthState = 2;
     else if (mouthCounter >= 1600) mouthCounter = 0;
     else face.mouthState = 0;
+
+    if (sneakPeekCounter > 100) face.eyeL.state = 2;
+    sneakPeekCounter++;
+
 }
 
 
@@ -185,8 +192,9 @@ function handleQuirks(){
 function animate(){
     gameFrame++;
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    handleQuirks()
+
     handleFace();
+    handleQuirks()
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
     ctx.strokeText("next", canvas.width / 2, 100, 200 );
