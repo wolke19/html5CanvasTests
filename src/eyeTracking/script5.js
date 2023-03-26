@@ -8,6 +8,11 @@ ctx.strokeStyle = "white";
 
 let gameFrame = 0;
 let mouthCounter = 0;
+
+// BEHAVIOUR
+const mountState0 = 1500 + Math.random() * 1500;
+const mouthState0 = 0;
+
 const eyeArray = [];
 
 const middle = {
@@ -57,8 +62,9 @@ class Eye{
         this.pupilX = this.x;
         this.pupilY = this.y;
 
-        this.awareness = 500;
-
+        this.awareness = 350;
+        this.state = false;
+        this.event = 0;
     }
 
     update(){
@@ -69,13 +75,12 @@ class Eye{
             this.pupilRadius = this.maxPupilRadius - 0.9*(this.maxPupilRadius * (distance / this.awareness));
             this.pupilX = this.x + (this.radius - this.pupilRadius) * (dx / (canvas.width));
             this.pupilY = this.y + (this.radius - this.pupilRadius) * (dy /canvas.height);
-            this.draw(1);
+            this.state = true;
         }
         else{
-            this.draw(0);
+            this.state = false;
         }
     }
-
     draw(active){
         if (active){
             ctx.beginPath();
@@ -97,29 +102,61 @@ class Eye{
 }
 
 class Face{
-    constructor(x,y, r) {
+    constructor(x,y,r) {
+        this.mouthState = 0;
         this.radius = r;
         this.x = x;
         this.y = y;
+        this.mouthWidth = 40;
+        this.mouthX = this.x - this.mouthWidth / 2;
+        this.mouthY = this.y + this.radius/2;
+        this.mouthOpenPx = 1;
         this.eyeL = new Eye(this.x - this.radius / 2, this.y - this.radius / 3, this.radius/3);
         this.eyeR = new Eye(this.x + this.radius / 2, this.y - this.radius / 3, this.radius/3);
     }
     update(){
+        switch (this.mouthState){
+            case 0: {
+                this.mouthWidth = 40;
+                this.mouthX = this.x - this.mouthWidth / 2;
+                this.mouthY = this.y + this.radius / 2;
+                this.mouthOpenPx = 1;
+                break;
+            }
+            case 1: {
+                this.mouthWidth = 10;
+                this.mouthX = this.x - this.radius / 2;
+                this.mouthY = this.y + this.radius / 1.9;
+                this.mouthOpenPx = 1;
+                break;
+            }
+            case 2: {
+                this.mouthWidth = 20;
+                this.mouthX = this.x + this.radius / 4;
+                this.mouthY = this.y + this.radius / 1.7;
+                this.mouthOpenPx = 1;
+                break;
+            }
 
+        }
+
+
+        this.eyeL.update();
+        this.eyeR.update();
     }
 
     draw(){
+        // HEAD
         ctx.beginPath();
         ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
         ctx.stroke();
-        if (mouthCounter > 500){
-            ctx.fillRect(this.x + this.radius / 5, this.y + this.radius/2, 30,1)
-        }
-        else {
-            ctx.fillRect(this.x - this.radius / 4, this.y + this.radius/2, 30,1)
-        }
 
-        handleEyes()
+        // MOUTH
+        ctx.fillRect(this.mouthX , this.mouthY, this.mouthWidth, this.mouthOpenPx);
+
+        // EYES
+        this.eyeL.draw(this.eyeL.state);
+        this.eyeR.draw(this.eyeR.state);
     }
 }
 
@@ -130,27 +167,25 @@ class Face{
 
 const face = new Face(canvas.width/2, canvas.height/2, 100);
 
-function handleEyes(){
-    face.eyeL.update();
-    face.eyeR.update();
-    // eyeArray.forEach(eye => {
-    //     eye.update();
-    //     eye.draw();
-    // })
-}
-
 function handleFace(){
     face.update();
     face.draw();
+}
+
+function handleQuirks(){
+    mouthCounter++;
+    if (mouthCounter >= 1000 && mouthCounter < 1400) face.mouthState = 1;
+    else if (mouthCounter >= 1400 && mouthCounter < 1600) face.mouthState = 2;
+    else if (mouthCounter >= 1600) mouthCounter = 0;
+    else face.mouthState = 0;
 }
 
 
 // ANIMATION____________________________________________________________________________________________________________
 function animate(){
     gameFrame++;
-    mouthCounter++;
-    if (mouthCounter > 3000)mouthCounter= 0;
     ctx.clearRect(0,0,canvas.width, canvas.height);
+    handleQuirks()
     handleFace();
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
