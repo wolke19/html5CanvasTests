@@ -38,7 +38,7 @@ addEventListener("click", function (event){
         event.x < canvas.width/2 + 50 &&
         event.y > 50 &&
         event.y < 100){
-        window.location = "https://wolke19.github.io/html5CanvasTests";
+        window.location = "https://wolke19.github.io/html5CanvasTests/src/unionFindAlgorythm";
     }
 })
 
