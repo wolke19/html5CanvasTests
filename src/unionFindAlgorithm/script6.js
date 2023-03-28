@@ -4,7 +4,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let infobox = true;
-let radius = 45;
+let radius = 55;
 const junctionArray = [];
 let animationState = 0;
 const joinpartners = {
@@ -125,7 +125,7 @@ window.addEventListener("keypress", function (event){
 class Junction {
     constructor(number) {
         this.number = number;
-        this.group = number;
+        this.parent = number;
         this.size = 1;
 
         this.x = (canvas.width / 2 - 50) + Math.random() * 100;
@@ -170,22 +170,28 @@ class Junction {
     }
     drawEdges(){
         ctx.moveTo(this.x, this.y);
-        ctx.lineTo(junctionArray[this.group].x, junctionArray[this.group].y);
-        ctx.stroke();
+        if (this.parent != this.number){
+            ctx.lineTo(junctionArray[this.parent].x, junctionArray[this.parent].y);
+            ctx.stroke();
+        }
     }
     draw(){
-        ctx.fillStyle = "hsl(" + 150 + (find(this.number) * 1000 ) + ", 100%, 50%)";
+        let color = "hsl(" + 150 + (find(this.number) * 1000 ) + ", 100%, 50%)";
+
+
+        let grad = ctx.createRadialGradient(this.x,this.y,this.radius-10, this.x, this.y, this.radius);
+        grad.addColorStop(0,color);
+        grad.addColorStop(1,"darkslategrey");
+        ctx.fillStyle = grad;
+
         ctx.beginPath();
         ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
         ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
-        ctx.stroke();
+
 
         ctx.fillStyle = "black";
         ctx.font = "16px Arial";
-        ctx.fillText("Parent: " + this.group + " | Size: " + this.size,
+        ctx.fillText("Parent: " + this.parent + " | Size: " + this.size,
             this.x, this.y - this.radius - 5, this.radius * 2);
         ctx.fillText("group: " + find(this.number), this.x, this.y + 30, this.radius);
         ctx.font = "50px Arial";
@@ -221,8 +227,8 @@ class Textbox {
 // STANDALONE FUNCTIONS_________________________________________________________________________________________________________________
 function find(p){
     let pTemp = p;
-    while (pTemp !== junctionArray[pTemp].group){
-        pTemp = junctionArray[pTemp].group;
+    while (pTemp !== junctionArray[pTemp].parent){
+        pTemp = junctionArray[pTemp].parent;
     }
     return junctionArray[pTemp].number;
 }
@@ -235,11 +241,11 @@ function union(p,q){
 
     if (pRoot === qRoot) return;
     else if (junctionArray[pRoot].size < junctionArray[qRoot].size){
-        junctionArray[pRoot].group = qRoot;
+        junctionArray[pRoot].parent = qRoot;
         junctionArray[qRoot].size += junctionArray[pRoot].size;
     }
     else{
-        junctionArray[qRoot].group = pRoot;
+        junctionArray[qRoot].parent = pRoot;
         junctionArray[pRoot].size += junctionArray[qRoot].size;
     }
 }
