@@ -1,6 +1,6 @@
 # html5CanvasTests
 
-Learning Javaskript + HTML5 Canvas
+Learning Javaskript + HTML5 Canvas from zero.
 
 Game assets from:
 https://www.gamedeveloperstudio.com/index.php
