@@ -1,5 +1,5 @@
 // Canvas setup
-const canvas = document.getElementById("canvas1");
+const canvas = document.getElementById("c");
 const c = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;

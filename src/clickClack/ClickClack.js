@@ -3,13 +3,13 @@ let w = c.width = window.innerWidth,
     ctx = c.getContext( '2d' ),
 
     opts = {
-    color: "white",
+        color: "white",
     },
 
     tick = 0,
     balls = [];
 
-ctx.fillStyle = "black";
+ctx.fillStyle = "antiquewhite";
 
-// ...
+
 
