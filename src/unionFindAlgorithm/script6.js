@@ -33,7 +33,7 @@ addEventListener("click", function (event){
         event.x < canvas.width * 0.15 + 100 &&
         event.y > canvas.height - 150 &&
         event.y < canvas.height - 100) {
-        window.location = "https://wolke19.github.io/html5CanvasTests";
+        window.location = "https://wolke19.github.io/html5CanvasTests/src/clickClack";
     }
 
 
