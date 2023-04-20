@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let radius = 55;
+let radius = 45;
 const junctionArray = [];
 let animationState = 0;
 const joinpartners = {
@@ -35,9 +35,6 @@ addEventListener("click", function (event){
         event.y < canvas.height - 100) {
         window.location = "https://wolke19.github.io/html5CanvasTests/src/clickClack";
     }
-
-
-
 
     switch (animationState){
         case 0: {
@@ -124,11 +121,11 @@ window.addEventListener("keypress", function (event){
 class Junction {
     constructor(number) {
         this.number = number;
-        this.parent = number;
+        this.group = number;
         this.size = 1;
 
-        this.x = 150 + (Math.random() * (canvas.width - 300));
-        this.y = 150 + (Math.random() * (canvas.height - 400));
+        this.x = (canvas.width / 2 - 50) + Math.random() * 100;
+        this.y = (canvas.height / 2 -50) + Math.random() * 100;
         this.radius = radius;
         this.speedX = .1;
         this.speedY = .1;
@@ -146,7 +143,7 @@ class Junction {
             const dx = junctionArray[i].x - this.x;
             const dy = junctionArray[i].y - this.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < this.radius * 1.5){
+            if (distance < this.radius * 3){
                 this.speedX -= dx / (closePushParameter * distance);
                 this.speedY -= dy / (closePushParameter * distance);
             }
@@ -169,42 +166,28 @@ class Junction {
     }
     drawEdges(){
         ctx.moveTo(this.x, this.y);
-        if (this.parent !== this.number){
-            ctx.lineTo(junctionArray[this.parent].x, junctionArray[this.parent].y);
+        if (this.group !== this.number){
+            ctx.lineTo(junctionArray[this.group].x, junctionArray[this.group].y);
             ctx.stroke();
         }
     }
     draw(){
-        let color = "hsl(" + 150 + (find(this.number) * 1000 ) + ", 100%, 50%)";
-
-
-        let grad = ctx.createRadialGradient(this.x,this.y,this.radius-10, this.x, this.y, this.radius);
-        grad.addColorStop(0,color);
-        grad.addColorStop(1,"darkslategrey");
-        ctx.fillStyle = grad;
+        ctx.fillStyle = "hsl(" + 150 + (find(this.number) * 1000 ) + ", 100%, 50%)";
         ctx.beginPath();
         ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
         ctx.fill();
-
-        let gradSmall = ctx.createRadialGradient(this.x - this.radius/3,this.y -this.radius/3,0,
-            this.x - this.radius/3,this.y -this.radius/3,this.radius/3);
-        gradSmall.addColorStop(1, color);
-        gradSmall.addColorStop(0, "hsl(" + 150 + (find(this.number) * 1000 ) + ", 100%, 60%)");
-        ctx.fillStyle = gradSmall;
+        ctx.strokeStyle = "black";
         ctx.beginPath();
-        ctx.arc(this.x - this.radius/3,this.y -this.radius/3,this.radius/3,0,Math.PI*2);
-        ctx.fill();
+        ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
+        ctx.stroke();
 
         ctx.fillStyle = "black";
         ctx.font = "16px Arial";
-        ctx.fillText("Parent: " + this.parent + " | Size: " + this.size + " | Group: " + find(this.number),
-            this.x, this.y - this.radius - 5, this.radius * 2.5);
-        // ctx.fillText("group: " + find(this.number), this.x, this.y + this.radius + 12, this.radius);
+        ctx.fillText("Parent: " + this.group + " | Size: " + this.size,
+            this.x, this.y - this.radius - 5, this.radius * 2);
+        ctx.fillText("group: " + find(this.number), this.x, this.y + 30, this.radius);
         ctx.font = "50px Arial";
-        ctx.fillText(this.number, this.x, this.y + 17, this.radius);
-
-
-
+        ctx.fillText(this.number, this.x, this.y + 15, this.radius);
     }
 }
 class Textbox {
@@ -236,8 +219,8 @@ class Textbox {
 // STANDALONE FUNCTIONS_________________________________________________________________________________________________________________
 function find(p){
     let pTemp = p;
-    while (pTemp !== junctionArray[pTemp].parent){
-        pTemp = junctionArray[pTemp].parent;
+    while (pTemp !== junctionArray[pTemp].group){
+        pTemp = junctionArray[pTemp].group;
     }
     return junctionArray[pTemp].number;
 }
@@ -250,11 +233,11 @@ function union(p,q){
 
     if (pRoot === qRoot) return;
     else if (junctionArray[pRoot].size < junctionArray[qRoot].size){
-        junctionArray[pRoot].parent = qRoot;
+        junctionArray[pRoot].group = qRoot;
         junctionArray[qRoot].size += junctionArray[pRoot].size;
     }
     else{
-        junctionArray[qRoot].parent = pRoot;
+        junctionArray[qRoot].group = pRoot;
         junctionArray[pRoot].size += junctionArray[qRoot].size;
     }
 }
@@ -280,13 +263,14 @@ let noField = new Textbox(canvas.width/2 + 20, canvas.height/2 + 80, 150, 70,
 
 // ANIMATION____________________________________________________________________________________________________________
 function animate(){
-
     switch (animationState) {
         case 0: {
             ctx.clearRect(0,0,canvas.width, canvas.height);
             ctx.font = "30px Arial";
-            ctx.strokeStyle = "black";
-            ctx.strokeText("NEXT", canvas.width * 0.15, canvas.height -100 , 200 );
+            ctx.fillStyle = "black";
+            ctx.fillText("NEXT", canvas.width * 0.15, canvas.height -100 , 200 );
+
+
             for (let i = 0; i < junctionArray.length; i++) {
                 junctionArray[i].drawEdges();
             }
